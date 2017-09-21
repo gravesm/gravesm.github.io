@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Snake Handling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Snake Handling</h1>
+        </section>
+        <section>
+          <h2>What I'm going to talk about</h2>
+          <ul>
+            <li>virtualenvs</li>
+            <li>Python packages</li>
+            <li>advice on what to use</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Anatomy of a Python Installation</h3>
+          <ul>
+            <li>Python executable</li>
+            <li>standard library and header files</li>
+            <li>3rd party libraries (site-packages)</li>
+          </ul>
+        </section>
+        <section>
+          <h3>What happens when you import</h3>
+          <p>Python looks for the module you are importing in the directories of
+            <code>sys.path</code>
+          </p>
+          <code><pre data-trim>
+>>> import sys
+>>> sys.path
+['', '/home/mgraves/.local/opt/python3.6/lib/python36.zip',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6/lib-dynload',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6/site-packages']
+          </pre></code>
+        </section>
+        <section>
+          <h3>How does sys.path get populated?</h3>
+          <ul>
+            <li>site and sysconfig modules</li>
+            <li>stdlib = sys.base_prefix + /lib/pythonX.Y</li>
+            <li>site-packages = sys.prefix + /lib/pythonX.Y/site-packages</li>
+          </ul>
+          <p>(PEP 405 has a good explanation)</p>
+        </section>
+        <section>
+          <h3>Example of sys.path</h3>
+          <code><pre data-trim>
+$ python
+>>> import sys
+>>> sys.prefix
+'/home/mgraves/.local/opt/python3.6'
+>>> sys.base_prefix
+'/home/mgraves/.local/opt/python3.6'
+>>> sys.path
+['', '/home/mgraves/.local/opt/python3.6/lib/python36.zip',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6/lib-dynload',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6/site-packages']
+          </pre></code>
+        </section>
+        </section>
+        <section>
+          <h3>Why do you care?</h3>
+          <em>A virtualenv is just a separate site-packages directory and a
+            modified sys.path</em>
+        </section>
+        <section>
+          <h3>Let's look at a virtualenv</h3>
+          <pre><code data-trim>
+$ python -m venv snakehandler
+$ tree -L 4 snakehandler/
+snakehandler/
+├── bin
+│   ├── activate
+│   ├── activate.csh
+│   ├── activate.fish
+│   ├── easy_install
+│   ├── easy_install-3.6
+│   ├── pip
+│   ├── pip3
+│   ├── pip3.6
+│   ├── python -> python3
+│   └── python3 -> /home/mgraves/.local/opt/python3.6/bin/python3
+├── include
+├── lib
+│   └── python3.6
+│       └── site-packages
+│           ├── easy_install.py
+│           ├── pip
+│           ├── pip-9.0.1.dist-info
+│           ├── pkg_resources
+│           ├── __pycache__
+│           ├── setuptools
+│           └── setuptools-28.8.0.dist-info
+├── lib64 -> lib
+└── pyvenv.cfg
+          </pre></code>
+        </section>
+        <section>
+          <h3>and how sys.path looks</h3>
+          <code><pre data-trim>
+$ snakehandler/bin/python
+>>> import sys
+>>> sys.path
+['', '/home/mgraves/.local/opt/python3.6/lib/python36.zip',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6',
+ '/home/mgraves/.local/opt/python3.6/lib/python3.6/lib-dynload',
+ '/home/mgraves/snakehandler/lib/python3.6/site-packages']
+>>> sys.base_prefix
+'/home/mgraves/.local/opt/python3.6'
+>>> sys.prefix
+'/home/mgraves/snakehandler'
+          </pre></code>
+        </section>
+        <section>
+          <h3>Activating a virtualenv</h3>
+          <p>All this does is prepend the bin directory of your venv to
+            <code>$PATH</code>. The magic is all handled by Python itself.</p>
+          <code><pre data-trim>
+$ echo $PATH
+/home/mgraves/.local/bin:/usr/local/bin:/usr/bin:/bin
+$ source snakehandler/bin/activate
+$ echo $PATH
+/home/mgraves/snakehandler/bin:/home/mgraves/.local/bin:/usr/local/bin:/usr/bin:/bin
+          </pre></code>
+        </section>
+        <section>
+          <h2>3rd Party Modules (things that go in site-packages)</h2>
+        </section>
+        <section>
+          <h3>In the beginning was distutils...</h3>
+          <ul>
+            <li>Add to stdlib in 2000</li>
+            <li>Can add 3rd party libraries to a Python installation</li>
+            <li>Introduced <code>setup.py</code></li>
+            <li>Created source distribution (sdist) packaging format</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Then came setuptools</h3>
+          <ul>
+            <li>Can declare package dependencies</li>
+            <li>Creates egg distribution format</li>
+            <li>Install from PyPI with easy_install</li>
+          </ul>
+        </section>
+        <section>
+          <h3>The Great Packaging Wars of 2008-12</h3>
+          <ul>
+            <li>pip introduced as alternative to setuptool's <code>easy_install</code></li>
+            <li>distribute forked from setuptools</li>
+            <li>distutils2 forked from distutils</li>
+            <li>PyPA formed; takes over maintenance of pip and virtualenv</li>
+          </ul>
+        </section>
+        <section>
+          <h3>The Great Armistice</h3>
+          <ul>
+            <li>distribute merged back into setuptools</li>
+            <li>distutils2 abandoned</li>
+            <li>setuptools taken over by PyPA</li>
+          </ul>
+        </section>
+        <section>
+          <h3>wheels</h3>
+          <ul>
+            <li>standardized in 2013 with PEPs 425 &amp; 427</li>
+            <li>replace eggs</li>
+            <li>zip file that can just be unzipped into <code>site-packages</code></li>
+          </ul>
+        </section>
+        <section>
+          <h3>What you need to remember</h3>
+          <ul>
+            <li>always use pip to install packages*</li>
+            <li>be aware of which pip you are using</li>
+          </ul>
+          <code><pre data-trim>
+$ which pip
+/home/mgraves/.local/bin/pip
+$ source snakehandler/bin/activate
+(snakehandler)$ which pip
+/home/mgraves/snakehandler/bin/pip
+          </pre></code>
+        </section>
+        <section>
+          <h2>Tips for managing your projects</h2>
+        </section>
+        <section>
+          <h3>tox</h3>
+          <ul>
+            <li>just used for testing</li>
+            <li>creates a virtualenv and runs arbitrary commands in it</li>
+            <li>no facility for managing project depenedencies</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Tip #1</h3>
+          <em>Use tox when you want to test multiple python versions</em>
+        </section>
+        <section>
+          <h3>Tip #1a</h3>
+          <em>Mostly, we don't need to test against multiple python versions</em>
+        </section>
+        <section>
+          <h3>pipenv</h3>
+          <ul>
+            <li>used for testing and managing project dependencies</li>
+            <li>creates a virtualenv and manages dependencies in it</li>
+            <li>uses Pipfile and Pipfile.lock</li>
+            <li>an update command!</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Pipfile</h3>
+          <ul>
+            <li>intended to replace requirements.txt file</li>
+            <li>specify dependencies and dev dependencies in one place</li>
+            <li>predictable builds with Pipfile.lock</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Tip #2</h3>
+          <em>Use pipenv to manage your project's dependencies</em>
+          <p><small>* don't use pip</small></p>
+        </section>
+        <section>
+          <h3>Makefiles</h3>
+          <ul>
+            <li>becoming more and more common in python projects</li>
+            <li>make is everywhere</li>
+            <li>use it for: creating releases, building docs, running tests, etc.</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Tip #3</h3>
+          <em>Learn to use make</em>
+        </section>
+        <section>
+          <h3>Other Tools to Consider</h3>
+          <ul>
+            <li>flake8 for enforcing style guidelines</li>
+            <li>coverage for test coverage</li>
+            <li>mypy for static typing</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        transitionSpeed: 'fast',
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/marked.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/markdown.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/notes/notes.js', async: true },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
+
