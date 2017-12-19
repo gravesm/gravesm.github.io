@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Central Logging</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Central Logging</h1>
+        </section>
+        <section>
+          <h3>Architecture Overview</h3>
+          <img style="width: 80%; height: auto" src="arch1.svg">
+        </section>
+        <section>
+          <h3>The Forwarder</h3>
+          <ul>
+            <li>runs on every application server</li>
+            <li>send logs somewhere else</li>
+            <li>typically file based</li>
+            <li>lightweight</li>
+          </ul>
+        </section>
+        <section>
+          <h3>The Log Aggregator</h3>
+          <ul>
+            <li>filters/modifies logs</li>
+            <li>send logs to index/s3</li>
+            <li>horizontally scalable</li>
+            <li>should have robust buffering</li>
+          </ul>
+        </section>
+        <section>
+          <h3>The Index</h3>
+          <ul>
+            <li>takes in structured log messages</li>
+            <li>not a log archive</li>
+            <li>just use Elasticsearch</li>
+          </ul>
+        </section>
+        <section>
+          <h3>The Analyzer</h3>
+          <ul>
+            <li>UI on top of index</li>
+            <li>robust querying</li>
+            <li>data visualizations</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Our Central Logging Architecture</h3>
+          <img style="width: 80%; height: auto" src="fluent1.svg">
+        </section>
+        <section>
+          <h3>Fluentd</h3>
+          <ul>
+            <li>written in Ruby (!!!)</li>
+            <li>700+ community plugins</li>
+            <li>TLS support and flexible auth</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Kibana</h3>
+          <ul>
+            <li>Angular and Node</li>
+            <li>Lucene query syntax</li>
+            <li>plugin architecture</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        transitionSpeed: 'fast',
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/marked.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/markdown.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/notes/notes.js', async: true },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
+
