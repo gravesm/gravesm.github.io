@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Stateless Design and Horizontal Scaling</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Stateless Design and Horizontal Scaling</h1>
+        </section>
+        <section>
+          <h3>What is state?</h3>
+          <pre><code data-trim class="nohighlight">
+              Input + State --&gt; Output
+            </code></pre>
+        </section>
+        <section>
+          <h3>What is the state we care about?</h3>
+          <pre><code class="nohighlight" data-trim>
+              S0 --(config)--&gt; S1 --(request)--&gt; S2
+            </code></pre>
+        </section>
+        <section>
+          <h3>Examples of things that change state</h3>
+          <ul>
+            <li>Creating a new user session</li>
+            <li>Adding an item to an in memory cache</li>
+            <li>Writing data to an open file handle</li>
+          </ul>
+        </section>
+        <section>
+          <h3>What do we mean by horizontal scaling?</h3>
+          <pre><code data-trim class="nohighlight">
+              app --&gt; APP
+              app --&gt; app1 + app2 + app3 + ...</pre>
+            </code></pre>
+        </section>
+        <section>
+          <h3>What's so bad about state?</h3>
+          <pre><code data-trim class="nohighlight">
+            S1 --(request)->  S2               S3
+                              |                ^
+                              v                |
+            S1                S2 --(request)-> S3
+          </code></pre>
+        </section>
+        <section>
+          <h3>So what do we want?</h3>
+          <pre><code data-trim class="nohighlight">
+            S1 --(request)
+            ^        |
+            |        v
+            |<--------
+          </code></pre>
+        </section>
+        <section>
+          <h3>How do we get rid of state?</h3>
+          <ul>
+            <li>Make it someone else's problem</li>
+            <li>Get rid of your file system</li>
+            <li>Delegate different tasks to different process types</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Congratulations! You have removed state, now what?</h3>
+          <ul>
+            <li>Isolation in space and time</li>
+            <li>Flexible deployments</li>
+          </ul>
+        </section>
+        <section>
+          <h3>"Now you have two problems"</h3>
+          <ul>
+            <li>The network is slow and unreliable</li>
+            <li>Work has to be coordinated</li>
+          </ul>
+        </section>
+        <section>
+          <h3>A thought exercise</h3>
+          <ol>
+            <li>User uploads image</li>
+            <li>Generate thumbnail</li>
+            <li>Send image to IIIF server</li>
+          </ol>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        transitionSpeed: 'fast',
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/marked.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/markdown.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/notes/notes.js', async: true },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
+
