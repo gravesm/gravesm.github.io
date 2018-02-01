@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Normalization of Deviance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>You have a problem</h1>
+        </section>
+        <section>
+          <h2>You like to cut corners</h2>
+        </section>
+        <section>
+          <h2>You are kind of terrible at assessing risk</h2>
+        </section>
+        <section>
+          <h1>Normalization of deviance</h1>
+        </section>
+        <section>
+          <q>"The accident can be said to have flowed from a deficient safety culture, not only at the Chernobyl plant, but throughout the Soviet design, operating and regulatory organizations"</q>
+        </section>
+        <section>
+          <q>"The argument that the same risk was flown before without failure is often accepted as an argument for the safety of accepting it again"</q>
+        </section>
+        <section>
+          <h2>The usual suspects</h2>
+          <p class="fragment">I'm too busy right now.</p>
+          <p class="fragment">It's not that important.</p>
+          <p class="fragment">I'll get to it later.</p>
+        </section>
+        <section>
+          <h2>Make the right things easy and the wrong things hard</h2>
+          <ul class="fragment">
+            <li>No more manual deploys</li>
+            <li>No merges without passing tests</li>
+            <li>No merges without reviews</li>
+            <li>Automatic dependency upgrade PRs</li>
+            <li>...</li>
+          </ul>
+        </section>
+        <section>
+          <p>Be vigilant</p>
+          <p class="fragment">Be aware</p>
+          <p class="fragment">Be normal</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        transitionSpeed: 'fast',
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/marked.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/markdown.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/notes/notes.js', async: true },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
+
