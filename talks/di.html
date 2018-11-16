@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>DI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/pdf.css' : 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Dependency Injection and Dependency Inversion</h1>
+        </section>
+        <section>
+          <h3>Not that kind of dependency</h3>
+        </section>
+        <section>
+          <pre><code data-trim>
+class Indexer:
+    def __init__(self):
+        self.parser = MarcParser()
+    def index(self, file):
+        records = self.parser.parse(file)
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim>
+class Indexer:
+    def __init__(self, format):
+        if format == 'binary':
+            self.parser = BinaryMarcParser()
+        elif format == 'xml':
+            self.parser = XMLMarcParser()
+    def index(self, file):
+        records = self.parser.parse(file)
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim>
+class Indexer:
+    def __init__(self, parser):
+        self.parser = parser
+    def index(self, file):
+        records = self.parser.parse(file)
+          </code></pre>
+        </section>
+        <section>
+          <p>Indexer --&gt; Parser</p>
+        </section>
+        <section>
+          <p>Indexer --&gt; Parser Interface &lt;-- Parser
+        </section>
+        <section>
+          <pre><code data-trim>
+type Parser interface {
+    Parse() &lt;-chan Record
+}
+type BinaryMarcParser struct {
+    file io.Reader
+}
+func (p BinaryMarcParser) Parse () &lt;-chan Record {
+    // Parse some things
+}
+func Index(p Parser) {
+    // Index some things
+}
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim>
+def main():
+    # get command line args
+    if format == 'binary':
+        parser = BinaryMarcParser()
+    elif format == 'xml':
+        parser = XMLMarcParser()
+    indexer = Indexer(parser)
+    indexer.index(file)
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim>
+def main():
+    # get command line args
+    if format == 'binary':
+        ...
+    elif format == 'json':
+       parser = JSONMarcParser()
+    ...
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim>
+def main():
+    # get command line args
+    parser = make_parser(file)
+    ...
+          </code></pre>
+        </section>
+        <section>
+          <h3>Inversion of Control</h3>
+          <pre>
+                             +--&gt; BinaryMarcParser
+                             |
+Indexer &lt;--&gt; IoC Framework --+--&gt; XMLMarcParser
+                             |
+                             +--&gt; JSONMarcParser
+            </pre>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        transitionSpeed: 'fast',
+        dependencies: [
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/marked.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/markdown/markdown.js' },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/notes/notes.js', async: true },
+          { src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
+
